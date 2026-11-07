@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dayo Vault</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#06070e; --bg2:#0a0c18; --panel:rgba(16,20,38,.72);
+  --txt:#eef2fb; --txt2:#9aa7c4; --txt3:#56668a;
+  --hair:rgba(150,170,220,.10); --hair2:rgba(150,170,220,.20);
+  --teal:#2dd4bf; --cyan:#38bdf8; --sky:#7dd3fc;
+  --amber:#fbbf24; --coral:#fb7185; --violet:#a78bfa; --lime:#a3e635;
+  --good:#2dd4bf; --warn:#fbbf24; --bad:#fb7185;
+  --r-lg:22px; --r-md:16px; --r-sm:11px;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+  --disp:'Space Grotesk',-apple-system,system-ui,sans-serif;
+  --shadow:0 24px 60px -20px rgba(0,0,0,.7), 0 2px 8px rgba(0,0,0,.4);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--disp);background:var(--bg);color:var(--txt);min-height:100vh;overflow-x:hidden}
+.aurora{position:fixed;inset:0;z-index:0;overflow:hidden;filter:blur(70px);opacity:.5;pointer-events:none}
+.aurora i{position:absolute;border-radius:50%;display:block}
+.aurora i:nth-child(1){width:46vw;height:46vw;left:-6%;top:-8%;background:radial-gradient(circle,#1e6b6b,transparent 70%)}
+.aurora i:nth-child(2){width:40vw;height:40vw;right:-8%;top:4%;background:radial-gradient(circle,#244a86,transparent 70%)}
+.aurora i:nth-child(3){width:38vw;height:38vw;left:30%;bottom:-12%;background:radial-gradient(circle,#5b3a8a,transparent 70%)}
+.wrap{position:relative;z-index:1;max-width:1180px;margin:0 auto;padding:28px 24px 80px}
+header{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:22px}
+.logo{font-weight:700;font-size:26px;letter-spacing:.04em}
+.logo b{color:var(--teal)}
+.logo span{color:var(--txt3);font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.12em;margin-left:8px}
+.chips{display:flex;gap:10px;margin-left:auto;flex-wrap:wrap}
+.chip{background:var(--panel);border:1px solid var(--hair);border-radius:var(--r-sm);padding:8px 13px;font-family:var(--mono);font-size:12px;color:var(--txt2);backdrop-filter:blur(12px)}
+.chip b{color:var(--txt);font-size:15px}
+.chip.good b{color:var(--good)} .chip.warn b{color:var(--warn)}
+.panel{background:var(--panel);border:1px solid var(--hair);border-radius:var(--r-md);backdrop-filter:blur(16px);box-shadow:var(--shadow)}
+.uploader{padding:18px;margin-bottom:20px}
+.drop{border:1.5px dashed var(--hair2);border-radius:var(--r-md);padding:26px;text-align:center;transition:.18s;cursor:pointer}
+.drop.hot{border-color:var(--teal);background:rgba(45,212,191,.06)}
+.drop h3{font-size:16px;font-weight:600;margin-bottom:5px}
+.drop p{color:var(--txt3);font-size:13px;font-family:var(--mono)}
+.urow{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;align-items:center}
+select,input[type=text]{background:#0b0e1c;border:1px solid var(--hair2);color:var(--txt);border-radius:var(--r-sm);padding:9px 12px;font-family:var(--mono);font-size:13px;outline:none}
+input[type=text]{flex:1;min-width:140px}
+select:focus,input:focus{border-color:var(--cyan)}
+.btn{background:linear-gradient(135deg,var(--teal),var(--cyan));color:#04121a;border:none;border-radius:var(--r-sm);padding:9px 18px;font-family:var(--disp);font-weight:600;font-size:13px;cursor:pointer;transition:.15s}
+.btn:hover{filter:brightness(1.1)} .btn:disabled{opacity:.5;cursor:default}
+.bar{height:5px;background:var(--hair);border-radius:3px;margin-top:12px;overflow:hidden;display:none}
+.bar.on{display:block} .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--teal),var(--cyan));transition:.2s}
+.rail{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.tab{background:var(--panel);border:1px solid var(--hair);border-radius:999px;padding:8px 16px;font-size:13px;font-weight:500;color:var(--txt2);cursor:pointer;transition:.15s;display:flex;align-items:center;gap:8px}
+.tab:hover{border-color:var(--hair2);color:var(--txt)}
+.tab.active{background:rgba(45,212,191,.12);border-color:var(--teal);color:var(--txt)}
+.tab .n{font-family:var(--mono);font-size:11px;color:var(--txt3);background:rgba(255,255,255,.05);border-radius:6px;padding:1px 6px}
+.tab.active .n{color:var(--teal)}
+.searchbar{margin-bottom:16px}
+.searchbar input{width:100%;flex:none}
+.sect{margin-bottom:26px}
+.sect h2{font-size:13px;font-family:var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--txt3);margin-bottom:12px;display:flex;align-items:center;gap:10px}
+.sect h2 .dot{width:9px;height:9px;border-radius:50%}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:12px}
+.card{padding:15px;border-radius:var(--r-md);background:var(--panel);border:1px solid var(--hair);transition:.15s;position:relative}
+.card:hover{border-color:var(--hair2);transform:translateY(-1px)}
+.card .name{font-weight:600;font-size:14px;line-height:1.35;margin-bottom:8px;word-break:break-word}
+.card .meta{display:flex;gap:8px;flex-wrap:wrap;font-family:var(--mono);font-size:11px;color:var(--txt3);margin-bottom:10px;align-items:center}
+.badge{border-radius:6px;padding:2px 8px;font-family:var(--mono);font-size:10.5px;font-weight:500}
+.readable{color:var(--good);background:rgba(45,212,191,.1)}
+.noread{color:var(--warn);background:rgba(251,191,36,.1)}
+.actions{display:flex;gap:7px;flex-wrap:wrap}
+.actions button{background:transparent;border:1px solid var(--hair);color:var(--txt2);border-radius:8px;padding:5px 10px;font-size:11.5px;font-family:var(--mono);cursor:pointer;transition:.13s}
+.actions button:hover{border-color:var(--cyan);color:var(--txt)}
+.actions button.del:hover{border-color:var(--bad);color:var(--bad)}
+.empty{text-align:center;color:var(--txt3);padding:50px;font-family:var(--mono);font-size:13px}
+.modal{position:fixed;inset:0;z-index:50;background:rgba(3,4,10,.8);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:24px}
+.modal.on{display:flex}
+.sheet{max-width:760px;width:100%;max-height:84vh;display:flex;flex-direction:column}
+.sheet .top{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--hair)}
+.sheet .top h3{font-size:15px;flex:1}
+.sheet pre{padding:18px;overflow:auto;white-space:pre-wrap;font-family:var(--mono);font-size:12.5px;line-height:1.6;color:var(--txt2)}
+.x{cursor:pointer;color:var(--txt3);font-size:20px;line-height:1;border:none;background:none}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--panel);border:1px solid var(--hair2);border-radius:var(--r-sm);padding:11px 18px;font-size:13px;z-index:60;opacity:0;transition:.25s;backdrop-filter:blur(12px)}
+.toast.on{opacity:1}
+</style>
+</head>
+<body>
+<div class="aurora"><i></i><i></i><i></i></div>
+<div class="wrap">
+  <header>
+    <div class="logo"><b>DAYO</b> VAULT <span>SOURCE&nbsp;INTELLIGENCE</span></div>
+    <div class="chips" id="chips"></div>
+  </header>
+
+  <div class="panel uploader">
+    <div class="drop" id="drop">
+      <h3>Drop files here, or click to browse</h3>
+      <p>any type · no size limit · PDFs, docs, slides, audio &amp; video (auto-transcribed)</p>
+      <input type="file" id="file" multiple hidden>
+    </div>
+    <div class="urow">
+      <select id="upCourse"></select>
+      <input type="text" id="newCourse" placeholder="…or type a new class">
+      <input type="text" id="upTags" placeholder="tags (optional, comma-sep)">
+      <button class="btn" id="upBtn" disabled>Upload</button>
+    </div>
+    <div class="bar" id="bar"><i></i></div>
+  </div>
+
+  <div class="rail" id="rail"></div>
+  <div class="searchbar"><input type="text" id="search" placeholder="search every source by name or content…"></div>
+  <div id="list"></div>
+</div>
+
+<div class="modal" id="modal"><div class="panel sheet">
+  <div class="top"><h3 id="mTitle"></h3><button class="x" onclick="closeModal()">✕</button></div>
+  <pre id="mBody"></pre>
+</div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const KNOWN=["EAS 2030","STSC 1120"];
+const COLORS={"EAS 2030":"var(--cyan)","STSC 1120":"var(--violet)","Uncategorized":"var(--txt3)"};
+const PALETTE=["var(--teal)","var(--amber)","var(--lime)","var(--coral)","var(--sky)"];
+let FILES=[], activeClass="All", searchTerm="";
+
+const $=s=>document.querySelector(s);
+const courseOf=f=>(f.course||"").trim()||"Uncategorized";
+const readable=f=>(f.word_count||0)>0;
+const colorFor=c=>{ if(COLORS[c])return COLORS[c]; let i=Math.abs([...c].reduce((a,ch)=>a+ch.charCodeAt(0),0))%PALETTE.length; return PALETTE[i]; };
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");setTimeout(()=>t.classList.remove("on"),2200);}
+function fmtSize(b){b=+b||0;return b>1e6?(b/1e6).toFixed(1)+"MB":b>1e3?(b/1e3|0)+"KB":b+"B";}
+function esc(s){return (s||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+
+async function load(){
+  try{const r=await fetch("/api/files"); const d=await r.json(); FILES=(d.files||[]).filter(f=>!f.deleted); render();}
+  catch(e){$("#list").innerHTML=`<div class="empty">Vault API unreachable.</div>`;}
+}
+function classes(){
+  const set=new Set(KNOWN);
+  FILES.forEach(f=>set.add(courseOf(f)));
+  return ["All",...[...set].sort((a,b)=>a==="Uncategorized"?1:b==="Uncategorized"?-1:a.localeCompare(b))];
+}
+function render(){
+  const total=FILES.length, words=FILES.reduce((a,f)=>a+(+f.word_count||0),0), read=FILES.filter(readable).length;
+  $("#chips").innerHTML=
+    `<div class="chip"><b>${total}</b> files</div>`+
+    `<div class="chip"><b>${words.toLocaleString()}</b> words indexed</div>`+
+    `<div class="chip ${read===total?'good':'warn'}"><b>${read}/${total}</b> Dayo-readable</div>`;
+  const cs=classes().filter(c=>c!=="All");
+  $("#upCourse").innerHTML=`<option value="">— pick a class —</option>`+cs.map(c=>`<option>${esc(c)}</option>`).join("");
+  const counts={}; FILES.forEach(f=>counts[courseOf(f)]=(counts[courseOf(f)]||0)+1);
+  $("#rail").innerHTML=classes().map(c=>{
+    const n=c==="All"?FILES.length:(counts[c]||0);
+    return `<div class="tab ${c===activeClass?'active':''}" data-c="${esc(c)}">${esc(c)}<span class="n">${n}</span></div>`;
+  }).join("");
+  document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>{activeClass=t.dataset.c;render();});
+  let shown=FILES.slice();
+  if(activeClass!=="All") shown=shown.filter(f=>courseOf(f)===activeClass);
+  if(searchTerm){const q=searchTerm.toLowerCase();shown=shown.filter(f=>(f.original_name||"").toLowerCase().includes(q)||(f.preview||"").toLowerCase().includes(q));}
+  shown.sort((a,b)=>(+b.uploaded_at||0)-(+a.uploaded_at||0));
+  if(!shown.length){$("#list").innerHTML=`<div class="empty">No sources here yet — drop files above to feed Dayo.</div>`;return;}
+  const groups={}; shown.forEach(f=>{(groups[courseOf(f)]=groups[courseOf(f)]||[]).push(f);});
+  const order=classes().filter(c=>c!=="All"&&groups[c]);
+  $("#list").innerHTML=order.map(c=>`
+    <div class="sect">
+      <h2><span class="dot" style="background:${colorFor(c)}"></span>${esc(c)} <span style="color:var(--txt3)">· ${groups[c].length}</span></h2>
+      <div class="grid">${groups[c].map(card).join("")}</div>
+    </div>`).join("");
+}
+function card(f){
+  const c=courseOf(f);
+  return `<div class="card">
+    <div class="name">${esc(f.original_name||"untitled")}</div>
+    <div class="meta">
+      <span class="badge" style="color:${colorFor(c)};background:rgba(255,255,255,.05)">${esc(c)}</span>
+      <span>${(f.word_count||0).toLocaleString()} words</span>
+      <span>${fmtSize(f.size)}</span>
+      <span class="badge ${readable(f)?'readable':'noread'}">${readable(f)?'✓ Dayo-readable':'⚠ no text'}</span>
+    </div>
+    <div class="actions">
+      <button onclick="viewText('${f.id}',this)" data-name="${esc(f.original_name||'')}">View</button>
+      <button onclick="window.open('/api/file/${f.id}/download')">Download</button>
+      <button onclick="moveClass('${f.id}')">Move</button>
+      <button class="del" onclick="delFile('${f.id}')">Delete</button>
+    </div>
+  </div>`;
+}
+async function viewText(id,btn){
+  $("#mTitle").textContent=btn.dataset.name||"Source"; $("#mBody").textContent="Loading…"; $("#modal").classList.add("on");
+  try{const r=await fetch(`/api/file/${id}/text`); const t=await r.text(); $("#mBody").textContent=t||"(no extracted text — Dayo cannot read this file)";}
+  catch(e){$("#mBody").textContent="Could not load text.";}
+}
+function closeModal(){$("#modal").classList.remove("on");}
+async function moveClass(id){
+  const cs=classes().filter(c=>c!=="All");
+  const dest=prompt("Move to class:\n"+cs.join("   |   ")+"\n\n(type the class name)");
+  if(!dest)return;
+  await fetch(`/api/file/${id}/update`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({course:dest.trim()})});
+  toast("Moved to "+dest.trim()); load();
+}
+async function delFile(id){
+  if(!confirm("Delete this file? (soft-delete — recoverable from trash)"))return;
+  await fetch(`/api/file/${id}/delete`,{method:"POST"}); toast("Deleted (moved to trash)"); load();
+}
+
+let queued=[];
+const drop=$("#drop"),fileInput=$("#file");
+drop.onclick=()=>fileInput.click();
+["dragover","dragenter"].forEach(e=>drop.addEventListener(e,ev=>{ev.preventDefault();drop.classList.add("hot");}));
+["dragleave","drop"].forEach(e=>drop.addEventListener(e,ev=>{ev.preventDefault();drop.classList.remove("hot");}));
+drop.addEventListener("drop",ev=>{queued=[...ev.dataTransfer.files];syncUp();});
+fileInput.onchange=()=>{queued=[...fileInput.files];syncUp();};
+function syncUp(){ $("#upBtn").disabled=!queued.length; if(queued.length) drop.querySelector("h3").textContent=queued.length+" file(s) ready — set class + upload"; }
+$("#upBtn").onclick=async()=>{
+  const course=($("#newCourse").value.trim()||$("#upCourse").value).trim();
+  if(!course){toast("Pick or type a class first");return;}
+  const tags=$("#upTags").value.trim();
+  $("#upBtn").disabled=true; const bar=$("#bar"); bar.classList.add("on");
+  for(let i=0;i<queued.length;i++){
+    await new Promise(res=>{
+      const fd=new FormData(); fd.append("file",queued[i]); fd.append("course",course); fd.append("tags",tags);
+      const xhr=new XMLHttpRequest(); xhr.open("POST","/api/upload");
+      xhr.upload.onprogress=e=>{const pct=e.total?(e.loaded/e.total*100):0; bar.querySelector("i").style.width=(((i+pct/100)/queued.length)*100)+"%";};
+      xhr.onload=res; xhr.onerror=res; xhr.send(fd);
+    });
+  }
+  bar.querySelector("i").style.width="100%"; toast(queued.length+" uploaded to "+course);
+  setTimeout(()=>{bar.classList.remove("on");bar.querySelector("i").style.width="0";},600);
+  queued=[];fileInput.value="";$("#newCourse").value="";$("#upTags").value="";
+  drop.querySelector("h3").textContent="Drop files here, or click to browse";$("#upBtn").disabled=true; load();
+};
+$("#search").oninput=e=>{searchTerm=e.target.value;render();};
+$("#modal").onclick=e=>{if(e.target.id==="modal")closeModal();};
+load(); setInterval(load,15000);
+</script>
+</body>
+</html>
